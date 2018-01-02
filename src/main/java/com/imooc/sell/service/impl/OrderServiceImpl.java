@@ -3,6 +3,7 @@ package com.imooc.sell.service.impl;
 import com.imooc.sell.dataoobject.OrderDetail;
 import com.imooc.sell.dataoobject.OrderMaster;
 import com.imooc.sell.dataoobject.ProductInfo;
+import com.imooc.sell.dto.CartDto;
 import com.imooc.sell.dto.OrderDTO;
 import com.imooc.sell.enums.ResultEnum;
 import com.imooc.sell.exception.SellException;
@@ -19,6 +20,10 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -63,7 +68,10 @@ public class OrderServiceImpl implements OrderService {
         orderMasterRepository.save(orderMaster);
 //        4.扣库存
 
-        return null;
+        List<CartDto> cartDtoList = orderDTO.getOrderDetailList().stream().map(e -> new CartDto(e.getProductId(),
+                e.getProductQuantity())).collect(Collectors.toList());
+        productService.decreaseStock(cartDtoList);
+        return orderDTO;
     }
 
     @Override

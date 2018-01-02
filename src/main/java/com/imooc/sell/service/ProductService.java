@@ -1,6 +1,7 @@
 package com.imooc.sell.service;
 
 import com.imooc.sell.dataoobject.ProductInfo;
+import com.imooc.sell.dto.CartDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -20,4 +21,15 @@ public interface ProductService {
 
     ProductInfo save(ProductInfo productInfo);
 
+    /**
+     * 加库存　
+     * @param cartDtoList
+     */
+    void increaseStock(List<CartDto> cartDtoList);
+
+    /**
+     *
+     * @param cartDtoList
+     */
+    void decreaseStock(List<CartDto> cartDtoList);
 }
