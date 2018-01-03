@@ -5,10 +5,8 @@ import com.imooc.sell.dataoobject.OrderMaster;
 import com.imooc.sell.dataoobject.ProductInfo;
 import com.imooc.sell.dto.CartDto;
 import com.imooc.sell.dto.OrderDto;
-import com.imooc.sell.enums.OrderStatusEnum;
-import com.imooc.sell.enums.PayStatusEnum;
 import com.imooc.sell.enums.ResultEnum;
-import com.imooc.sell.exception.SellException;
+import com.imooc.sell.exception.ErrException;
 import com.imooc.sell.repository.OrderDetailRepository;
 import com.imooc.sell.repository.OrderMasterRepository;
 import com.imooc.sell.service.OrderService;
@@ -53,7 +51,7 @@ public class OrderServiceImpl implements OrderService {
             log.error("【查找商品信息---】" + orderDetail.getProductId());
             ProductInfo productInfo = productService.findOne(orderDetail.getProductId());
             if (productInfo == null) {
-                throw new SellException(ResultEnum.PRODUCT_NOT_EXIST.getCode(),ResultEnum.PRODUCT_NOT_EXIST.getMessage());
+                throw new ErrException(ResultEnum.PRODUCT_NOT_EXIST.getCode(),ResultEnum.PRODUCT_NOT_EXIST.getMessage());
             }
             //        2.计算订单总价
             orderAmount = productInfo.getProductPrice()
@@ -86,11 +84,13 @@ public class OrderServiceImpl implements OrderService {
     public OrderDto findOne(String orderId) {
         OrderMaster orderMaster = orderMasterRepository.findOne(orderId);
         if (orderMaster == null) {
-            throw new SellException(ResultEnum.PRODUCT_NOT_EXIST);
+            throw new ErrException(ResultEnum.PRODUCT_NOT_EXIST.getCode(),
+                    ResultEnum.PRODUCT_NOT_EXIST.getMessage());
         }
         List<OrderDetail> orderDetails = orderDetailRepository.findByOrderId(orderId);
         if (CollectionUtils.isEmpty(orderDetails)) {
-            throw new SellException(ResultEnum.ORDER_DETAIL_NOT_EXIST);
+            throw new ErrException(ResultEnum.ORDER_DETAIL_NOT_EXIST.getCode(),
+                    ResultEnum.ORDER_DETAIL_NOT_EXIST.getMessage());
         }
         OrderDto orderDto = new OrderDto();
         BeanUtils.copyProperties(orderMaster, orderDto);

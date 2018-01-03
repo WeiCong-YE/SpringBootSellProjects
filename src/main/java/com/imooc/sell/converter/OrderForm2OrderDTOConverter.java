@@ -16,7 +16,7 @@ public class OrderForm2OrderDTOConverter {
         orderDto.setBuyerName(orderForm.getName());
         orderDto.setBuyerPhone(orderForm.getPhone());
         orderDto.setBuyerAddress(orderForm.getAddress());
-        orderDto.setBuyerOpenid(orderDto.getBuyerOpenid());
+        orderDto.setBuyerOpenid(orderForm.getOpenid());
         List<OrderDetail> list= JSON.parseArray(orderForm.getItems(),OrderDetail.class);
         orderDto.setOrderDetailList(list);
         log.error("【list】"+list.toString());

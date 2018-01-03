@@ -7,19 +7,15 @@ import com.imooc.sell.VO.ResultVO;
 import com.imooc.sell.converter.OrderForm2OrderDTOConverter;
 import com.imooc.sell.dataoobject.ProductCategory;
 import com.imooc.sell.dataoobject.ProductInfo;
-import com.imooc.sell.dto.CartDto;
 import com.imooc.sell.dto.OrderDto;
 import com.imooc.sell.enums.ResultEnum;
 import com.imooc.sell.exception.ErrException;
-import com.imooc.sell.exception.SellException;
 import com.imooc.sell.form.OrderForm;
-import com.imooc.sell.service.OrderService;
 import com.imooc.sell.service.impl.CategoryServiceImpl;
 import com.imooc.sell.service.impl.OrderServiceImpl;
 import com.imooc.sell.service.impl.ProductServiceImpl;
 import com.imooc.sell.utils.ResultVoUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.annotations.Parameter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -80,7 +76,7 @@ public class BuyerProductController {
 
 
     @PostMapping("/buy")
-    public ResultVO create(@Valid OrderForm orderForm, BindingResult bindingResult){
+    public ResultVO create(@RequestBody @Valid OrderForm orderForm, BindingResult bindingResult){
         log.error("【接口参数】"+orderForm);
         if (bindingResult.hasErrors()){
             throw new ErrException(ResultEnum.LACK_OF_PARAMETERS.getCode(),ResultEnum.LACK_OF_PARAMETERS.getMessage());

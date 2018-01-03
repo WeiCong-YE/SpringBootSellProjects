@@ -4,7 +4,7 @@ import com.imooc.sell.dataoobject.ProductInfo;
 import com.imooc.sell.dto.CartDto;
 import com.imooc.sell.enums.ProductStatusEnum;
 import com.imooc.sell.enums.ResultEnum;
-import com.imooc.sell.exception.SellException;
+import com.imooc.sell.exception.ErrException;
 import com.imooc.sell.repository.ProductInfoRepository;
 import com.imooc.sell.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,11 +59,13 @@ public class ProductServiceImpl implements ProductService {
         for (CartDto cartDto : cartDtoList) {
             ProductInfo productInfo = productInfoRepository.findOne(cartDto.getProductId());
             if (productInfo == null) {
-                throw new SellException(ResultEnum.PRODUCT_NOT_EXIST);
+                throw new ErrException(ResultEnum.PRODUCT_NOT_EXIST.getCode(),
+                        ResultEnum.PRODUCT_NOT_EXIST.getMessage());
             }
             int result = productInfo.getProductStock() - cartDto.getProductQuantity();
             if (result < 0) {
-                throw new SellException(ResultEnum.PRODUCT_STACK_ERR);
+                throw new ErrException(ResultEnum.PRODUCT_STACK_ERR.getCode(),
+                        ResultEnum.PRODUCT_STACK_ERR.getMessage());
             }
             productInfo.setProductStock(result);
             productInfoRepository.save(productInfo);

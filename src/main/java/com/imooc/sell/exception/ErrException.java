@@ -1,7 +1,9 @@
 package com.imooc.sell.exception;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class ErrException extends RuntimeException {
     private Integer code;
