@@ -2,7 +2,10 @@ package com.imooc.sell.utils;
 
 import java.util.Random;
 
-public class KeysUtills {
+/**
+ * 关于KEY的工具类
+ */
+public class KeysUtils {
     /**
      * 生成唯一的主键
      * 格式：时间+随机数

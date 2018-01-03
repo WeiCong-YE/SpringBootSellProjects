@@ -36,8 +36,11 @@ public class ResultVoUtils {
      */
     public static ResultVO error(Integer code,String msg){
         ResultVO<Object> resultVO = new ResultVO<>();
-        resultVO.setCode(0);
-        resultVO.setMessage("成功");
+        resultVO.setCode(code);
+        resultVO.setMessage(msg);
         return resultVO;
+    }
+    public static ResultVO error(String code,String msg){
+        return error(Integer.valueOf(code),msg);
     }
 }

@@ -9,7 +9,7 @@ import java.util.List;
 
 
 @Data
-public class OrderDTO {
+public class OrderDto {
     private String orderId;
     private String buyerName;
     private String buyerPhone;

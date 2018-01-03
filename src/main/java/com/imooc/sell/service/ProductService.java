@@ -7,6 +7,9 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
+/**
+ * 商品的service
+ */
 public interface ProductService {
     /**
      * 查询所有在架产品

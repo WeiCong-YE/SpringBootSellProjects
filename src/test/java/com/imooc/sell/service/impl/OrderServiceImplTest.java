@@ -1,7 +1,7 @@
 package com.imooc.sell.service.impl;
 
 import com.imooc.sell.dataoobject.OrderDetail;
-import com.imooc.sell.dto.OrderDTO;
+import com.imooc.sell.dto.OrderDto;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
@@ -26,11 +26,11 @@ public class OrderServiceImplTest {
 
     @Test
     public void create() throws Exception {
-        OrderDTO orderDTO = new OrderDTO();
-        orderDTO.setBuyerName("Ly");
-        orderDTO.setBuyerAddress("学院");
-        orderDTO.setBuyerPhone("23423423423");
-        orderDTO.setBuyerOpenid(sBugyerOpenId);
+        OrderDto orderDto = new OrderDto();
+        orderDto.setBuyerName("Ly");
+        orderDto.setBuyerAddress("学院");
+        orderDto.setBuyerPhone("23423423423");
+        orderDto.setBuyerOpenid(sBugyerOpenId);
 
         // 购物车
         List<OrderDetail> list = new ArrayList<>();
@@ -43,8 +43,8 @@ public class OrderServiceImplTest {
         o2.setProductId("132");
         list.add(o1);
         list.add(o2);
-        orderDTO.setOrderDetailList(list);
-        OrderDTO result = orderService.create(orderDTO);
+        orderDto.setOrderDetailList(list);
+        OrderDto result = orderService.create(orderDto);
         log.info("创建订单结果---" + result);
         Assert.assertNotNull(result);
     }
@@ -52,8 +52,8 @@ public class OrderServiceImplTest {
 
     @Test
     public void findOne() throws Exception {
-        OrderDTO orderDTO = orderService.findOne(sBuyerId);
-        log.info("[订单查询的结果]--"+orderDTO);
-        Assert.assertNotNull(orderDTO);
+        OrderDto orderDto = orderService.findOne(sBuyerId);
+        log.info("[订单查询的结果]--"+ orderDto);
+        Assert.assertNotNull(orderDto);
     }
 }
