@@ -23,7 +23,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -39,6 +41,11 @@ public class BuyerProductController {
     @Autowired
     private OrderServiceImpl orderService;
 
+    /**
+     * 商品列表
+     *
+     * @return
+     */
     @GetMapping("/list")
     public ResultVO list() {
 //        1.查询所有的上架商品
@@ -48,12 +55,12 @@ public class BuyerProductController {
                 .map(ProductInfo::getCategoryType)
                 .distinct()
                 .collect(Collectors.toList());
-        log.error("【找到的产品列表id列表】"+categoryTypeList.toString());
+        log.error("【找到的产品列表id列表】" + categoryTypeList.toString());
         List<ProductCategory> productCategories = categoryService.findByCategoryTypeIn(categoryTypeList);
 //        3.数据拼装
         List<ProductVo> productVoList = new ArrayList<>();
 
-        log.error("【找到的产品列表ProductVo列表】"+productCategories.toString());
+        log.error("【找到的产品列表ProductVo列表】" + productCategories.toString());
         for (ProductCategory productCategory : productCategories) {
             ProductVo productVo = new ProductVo();
             BeanUtils.copyProperties(productCategory, productVo);
@@ -74,17 +81,24 @@ public class BuyerProductController {
         return ResultVoUtils.success(productVoList);
     }
 
-
+    /**
+     * 创建订单
+     * @param orderForm
+     * @param bindingResult
+     * @return
+     */
     @PostMapping("/buy")
-    public ResultVO create(@RequestBody @Valid OrderForm orderForm, BindingResult bindingResult){
-        log.error("【接口参数】"+orderForm);
-        if (bindingResult.hasErrors()){
-            throw new ErrException(ResultEnum.LACK_OF_PARAMETERS.getCode(),ResultEnum.LACK_OF_PARAMETERS.getMessage());
+    public ResultVO create(@RequestBody @Valid OrderForm orderForm, BindingResult bindingResult) {
+        log.error("【接口参数】" + orderForm);
+        if (bindingResult.hasErrors()) {
+            throw new ErrException(ResultEnum.LACK_OF_PARAMETERS.getCode(), ResultEnum.LACK_OF_PARAMETERS.getMessage());
         }
-        OrderDto orderDto=OrderForm2OrderDTOConverter.convert(orderForm);
-        log.error("【convert后的结果】"+orderDto);
-        OrderDto createResult =   orderService.create(orderDto);
-        log.error("【创建后的结果】"+createResult);
-       return ResultVoUtils.success(orderForm);
+        OrderDto orderDto = OrderForm2OrderDTOConverter.convert(orderForm);
+        log.error("【convert后的结果】" + orderDto);
+        OrderDto createResult = orderService.create(orderDto);
+        log.error("【创建后的结果】" + createResult);
+        Map<String, String> map = new HashMap<>(1);
+        map.put("orderId", createResult.getOrderId());
+        return ResultVoUtils.success(map);
     }
 }

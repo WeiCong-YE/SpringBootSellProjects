@@ -66,7 +66,7 @@ public class OrderServiceImpl implements OrderService {
 
 //        3.写入订单数据库（orderMaster和orderDetail）
         OrderMaster orderMaster = new OrderMaster();
-        orderMaster.setOrderId(orderId);
+        orderDto.setOrderId(orderId);
         orderMaster.setOrderAmount(orderAmount);
         log.info("【复制前的orderMaster】"+orderMaster.toString());
         log.info("【复制前的orderDto】"+orderDto.toString());
