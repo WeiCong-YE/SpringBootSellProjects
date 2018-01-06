@@ -4,28 +4,17 @@ package com.imooc.sell.controller;
 import com.imooc.sell.VO.ProductInfoVO;
 import com.imooc.sell.VO.ProductVo;
 import com.imooc.sell.VO.ResultVO;
-import com.imooc.sell.converter.OrderForm2OrderDTOConverter;
 import com.imooc.sell.dataoobject.ProductCategory;
 import com.imooc.sell.dataoobject.ProductInfo;
-import com.imooc.sell.dto.OrderDto;
-import com.imooc.sell.enums.ResultEnum;
-import com.imooc.sell.exception.ErrException;
-import com.imooc.sell.form.OrderForm;
 import com.imooc.sell.service.impl.CategoryServiceImpl;
-import com.imooc.sell.service.impl.OrderServiceImpl;
 import com.imooc.sell.service.impl.ProductServiceImpl;
 import com.imooc.sell.utils.ResultVoUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -38,8 +27,6 @@ public class BuyerProductController {
     private ProductServiceImpl productService;
     @Autowired
     private CategoryServiceImpl categoryService;
-    @Autowired
-    private OrderServiceImpl orderService;
 
     /**
      * 商品列表
@@ -81,24 +68,5 @@ public class BuyerProductController {
         return ResultVoUtils.success(productVoList);
     }
 
-    /**
-     * 创建订单
-     * @param orderForm
-     * @param bindingResult
-     * @return
-     */
-    @PostMapping("/buy")
-    public ResultVO create(@RequestBody @Valid OrderForm orderForm, BindingResult bindingResult) {
-        log.error("【接口参数】" + orderForm);
-        if (bindingResult.hasErrors()) {
-            throw new ErrException(ResultEnum.LACK_OF_PARAMETERS.getCode(), ResultEnum.LACK_OF_PARAMETERS.getMessage());
-        }
-        OrderDto orderDto = OrderForm2OrderDTOConverter.convert(orderForm);
-        log.error("【convert后的结果】" + orderDto);
-        OrderDto createResult = orderService.create(orderDto);
-        log.error("【创建后的结果】" + createResult);
-        Map<String, String> map = new HashMap<>(1);
-        map.put("orderId", createResult.getOrderId());
-        return ResultVoUtils.success(map);
-    }
+
 }

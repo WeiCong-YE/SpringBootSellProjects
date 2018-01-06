@@ -24,7 +24,7 @@ public class ResultVoUtils {
      * 成功 但是data没有返回值的方法
      * @return ResultVO
      */
-    public static ResultVO success() {
+    public static ResultVO<Object> success() {
         return success(null);
     }
 

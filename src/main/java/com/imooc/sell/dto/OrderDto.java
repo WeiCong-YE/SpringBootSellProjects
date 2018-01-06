@@ -16,8 +16,8 @@ public class OrderDto {
     private String buyerAddress;
     private String buyerOpenid;
     private BigDecimal orderAmount;
-    private int orderStatus;
-    private int payStatus;
+    private Integer orderStatus;
+    private Integer payStatus;
     private Date createTime;
     private Date updateTime;
     private List<OrderDetail> orderDetailList;
