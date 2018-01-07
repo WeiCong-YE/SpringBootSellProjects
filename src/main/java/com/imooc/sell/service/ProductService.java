@@ -25,12 +25,14 @@ public interface ProductService {
     ProductInfo save(ProductInfo productInfo);
 
     /**
-     * 加库存　
+     * 加库存
+     *
      * @param cartDtoList
      */
     void increaseStock(List<CartDto> cartDtoList);
 
     /**
+     * 减库存
      *
      * @param cartDtoList
      */

@@ -1,6 +1,9 @@
 package com.imooc.sell.dto;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.imooc.sell.dataoobject.OrderDetail;
+import com.imooc.sell.utils.serializer.Date2LongSerializer;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -18,7 +21,11 @@ public class OrderDto {
     private BigDecimal orderAmount;
     private Integer orderStatus;
     private Integer payStatus;
+    @JsonSerialize(using = Date2LongSerializer.class)
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
+    @JsonSerialize(using = Date2LongSerializer.class)
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
     private List<OrderDetail> orderDetailList;
 }

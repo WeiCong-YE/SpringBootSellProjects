@@ -11,5 +11,9 @@ public interface BuyerService {
 
     OrderDto findOrderOne(String openId, String orderId);
 
-    OrderDto cancelOrder(String openId,String orderId);
+    OrderDto cancelOrder(String openId, String orderId);
+
+    OrderDto finishOrder(String openId, String orderId);
+
+    OrderDto payOrder(String openId, String orderId);
 }

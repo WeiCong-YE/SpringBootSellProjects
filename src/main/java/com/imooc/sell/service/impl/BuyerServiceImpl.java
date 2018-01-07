@@ -1,6 +1,5 @@
 package com.imooc.sell.service.impl;
 
-import com.imooc.sell.dataoobject.OrderMaster;
 import com.imooc.sell.dto.OrderDto;
 import com.imooc.sell.enums.ResultEnum;
 import com.imooc.sell.exception.ErrException;
@@ -8,7 +7,6 @@ import com.imooc.sell.service.BuyerService;
 import com.imooc.sell.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class BuyerServiceImpl implements BuyerService {
@@ -25,6 +23,18 @@ public class BuyerServiceImpl implements BuyerService {
     public OrderDto cancelOrder(String openId, String orderId) {
         OrderDto orderDto = doCheckOrderOwner(openId, orderId);
         return orderService.cancel(orderDto);
+    }
+
+    @Override
+    public OrderDto finishOrder(String openId, String orderId) {
+        OrderDto orderDto = doCheckOrderOwner(openId, orderId);
+        return orderService.finish(orderDto);
+    }
+
+    @Override
+    public OrderDto payOrder(String openId, String orderId) {
+        OrderDto orderDto = doCheckOrderOwner(openId, orderId);
+        return orderService.paid(orderDto);
     }
 
 

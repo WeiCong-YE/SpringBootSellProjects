@@ -7,16 +7,16 @@ import com.imooc.sell.dataoobject.ProductInfo;
 import com.imooc.sell.dto.CartDto;
 import com.imooc.sell.dto.OrderDto;
 import com.imooc.sell.enums.OrderStatusEnum;
+import com.imooc.sell.enums.PayStatusEnum;
 import com.imooc.sell.enums.ResultEnum;
 import com.imooc.sell.exception.ErrException;
 import com.imooc.sell.repository.OrderDetailRepository;
 import com.imooc.sell.repository.OrderMasterRepository;
 import com.imooc.sell.service.OrderService;
 import com.imooc.sell.service.ProductService;
+import com.imooc.sell.utils.BeanUtils;
 import com.imooc.sell.utils.KeysUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.criterion.Order;
-import com.imooc.sell.utils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -29,6 +29,9 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.imooc.sell.enums.ResultEnum.ORDER_CART_EMPTY_ERROR;
+import static com.imooc.sell.enums.ResultEnum.ORDER_UPDATE_ERR;
 
 @Service
 @Slf4j
@@ -123,16 +126,59 @@ public class OrderServiceImpl implements OrderService {
         log.error("【取消订单 复制后的】=" + orderMaster.toString());
         OrderMaster orderMasterResult = orderMasterRepository.save(orderMaster);
         log.error("【取消订单 保存后的】=" + orderMasterResult.toString());
-        return null;
+
+        // 返回库存
+        if (CollectionUtils.isEmpty(orderDto.getOrderDetailList())) {
+            throw new ErrException(ORDER_CART_EMPTY_ERROR.getCode(), ORDER_CART_EMPTY_ERROR.getMessage());
+        }
+        List<CartDto> cartDtos = orderDto.getOrderDetailList().stream().map(e -> new CartDto(e.getProductId(), e.getProductQuantity()))
+                .collect(Collectors.toList());
+        productService.increaseStock(cartDtos);
+
+        // 如果已经付款了 那么要退款
+        if (orderDto.getPayStatus().equals(PayStatusEnum.SUCCESS.getCode())) {
+            // TODO: 2018/1/7   退款
+        }
+        return orderDto;
     }
 
     @Override
+    @Transactional
     public OrderDto finish(OrderDto orderDto) {
-        return null;
+        OrderMaster orderMaster = new OrderMaster();
+        //  判断订单状态
+        if (!orderDto.getOrderStatus().equals(OrderStatusEnum.NEW.getCode())) {
+            throw new ErrException(ResultEnum.ORDER_STATUS_ERROR.getCode(), ResultEnum.ORDER_STATUS_ERROR.getMessage());
+        }
+        //修改订单状态
+        orderDto.setOrderStatus(OrderStatusEnum.FINISH.getCode());
+        BeanUtils.copyNonNullProperties(orderDto, orderMaster);
+        OrderMaster updateOrderMaster = orderMasterRepository.save(orderMaster);
+        if (updateOrderMaster == null) {
+            throw new ErrException(ResultEnum.ORDER_UPDATE_ERR.getCode(), ORDER_UPDATE_ERR.getMessage());
+        }
+        return orderDto;
     }
 
     @Override
     public OrderDto paid(OrderDto orderDto) {
-        return null;
+        // 判断订单状态
+        OrderMaster orderMaster = new OrderMaster();
+        //判断订单状态
+        if (!orderDto.getOrderStatus().equals(OrderStatusEnum.NEW.getCode())) {
+            throw new ErrException(ResultEnum.ORDER_STATUS_ERROR.getCode(), ResultEnum.ORDER_STATUS_ERROR.getMessage());
+        }
+        // 判断支付状态
+        if (!orderDto.getPayStatus().equals(PayStatusEnum.WAIT.getCode())) {
+            throw new ErrException(ResultEnum.ORDER_PAY_STATUS_ERR.getCode(), ResultEnum.ORDER_PAY_STATUS_ERR.getMessage());
+        }
+        orderDto.setPayStatus(PayStatusEnum.SUCCESS.getCode());
+        BeanUtils.copyNonNullProperties(orderDto, orderMaster);
+        OrderMaster result = orderMasterRepository.save(orderMaster);
+        if (result == null) {
+            throw new ErrException(ResultEnum.ORDER_UPDATE_ERR.getCode(), ORDER_UPDATE_ERR.getMessage());
+        }
+        // 修改支付状态
+        return orderDto;
     }
 }

@@ -83,7 +83,7 @@ public class BuyerOrderController {
      * @return
      */
     @GetMapping("/detail")
-    public ResultVO detail(@RequestParam(value = "openid", required = false) String openid,
+    public ResultVO detail(@RequestParam(value = "openId", required = false) String openid,
                            @RequestParam(value = "orderId", required = false) String orderId) {
         if (StringUtils.isEmpty(openid) || StringUtils.isEmpty(orderId)) {
             throw new ErrException(ResultEnum.LACK_OF_PARAMETERS.getCode(), ResultEnum.LACK_OF_PARAMETERS.getMessage());
@@ -95,18 +95,38 @@ public class BuyerOrderController {
     /**
      * 取消订单
      *
-     * @param openid
+     * @param openId
      * @param orderId
      * @return
      */
     @PostMapping("/cancel")
-    public ResultVO cancel(@RequestParam(value = "openid", required = false) String openid,
+    public ResultVO cancel(@RequestParam(value = "openId", required = false) String openId,
                            @RequestParam(value = "orderId", required = false) String orderId) {
-        if (StringUtils.isEmpty(openid) || StringUtils.isEmpty(orderId)) {
+        if (StringUtils.isEmpty(openId) || StringUtils.isEmpty(orderId)) {
             throw new ErrException(ResultEnum.LACK_OF_PARAMETERS.getCode(), ResultEnum.LACK_OF_PARAMETERS.getMessage());
         }
-        buyerService.cancelOrder(openid, orderId);
+        buyerService.cancelOrder(openId, orderId);
         return ResultVoUtils.success();
     }
 
+
+    @PostMapping("/finish")
+    public ResultVO finish(@RequestParam(value = "openId", required = false) String openId,
+                           @RequestParam(value = "orderId", required = false) String orderId) {
+        if (StringUtils.isEmpty(openId) || StringUtils.isEmpty(orderId)) {
+            throw new ErrException(ResultEnum.LACK_OF_PARAMETERS.getCode(), ResultEnum.LACK_OF_PARAMETERS.getMessage());
+        }
+        OrderDto orderDto = buyerService.finishOrder(openId, orderId);
+        return ResultVoUtils.success(orderDto);
+    }
+
+    @PostMapping("/pay")
+    public ResultVO pay(@RequestParam(value = "openId", required = false) String openId,
+                        @RequestParam(value = "orderId", required = false) String orderId) {
+        if (StringUtils.isEmpty(openId) || StringUtils.isEmpty(orderId)) {
+            throw new ErrException(ResultEnum.LACK_OF_PARAMETERS.getCode(), ResultEnum.LACK_OF_PARAMETERS.getMessage());
+        }
+        OrderDto orderDto = buyerService.payOrder(openId, orderId);
+        return ResultVoUtils.success(orderDto);
+    }
 }
