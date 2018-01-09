@@ -55,7 +55,7 @@ public class BuyerOrderController {
     }
 
     /**
-     * 查询订单
+     * 查询订单接口
      *
      * @param openId
      * @param page

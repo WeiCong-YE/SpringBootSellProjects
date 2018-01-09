@@ -54,6 +54,11 @@
 			<version>1.2.15</version>
 		</dependency>
 		<!--fastjson数据配置 end-->
+		<dependency>
+			<groupId>com.github.binarywang</groupId>
+			<artifactId>weixin-java-mp</artifactId>
+			<version>2.9.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>
