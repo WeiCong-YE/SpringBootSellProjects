@@ -11,6 +11,9 @@ import java.util.Date;
 @Entity
 @Data
 @DynamicUpdate
+/**
+ * 订单详情表
+ */
 public class OrderDetail {
 
     @Id
