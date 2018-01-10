@@ -1,5 +1,6 @@
 package com.imooc.sell.controller;
 
+import com.imooc.sell.exception.ErrException;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.exception.WxErrorException;
@@ -14,21 +15,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.net.URLEncoder;
 
+import static com.imooc.sell.enums.ResultEnum.WECHAT_ERR;
+
 @Controller
 @RequestMapping("/wechat")
 @Slf4j
 public class WeChatController {
 
     @Autowired
-    private WxMpService wxMpService;
+    private WxMpService wxService;
 
     @GetMapping("/authorize")
     public String authorize(@RequestParam("returnUrl") String returnUrl) {
-        WxMpService wxMpService = new WxMpServiceImpl();
         // 配置
-        String url = "http://sell.natapp4.cc/sell/wechat";
+        String url = "http://linly.nat300.top/sell/wechat/userInfo";
         // 调用方法
-        String redirectUrl = wxMpService.oauth2buildAuthorizationUrl(url, WxConsts.OAuth2Scope.SNSAPI_USERINFO, URLEncoder.encode(returnUrl));
+        String redirectUrl = wxService.oauth2buildAuthorizationUrl(url, WxConsts.OAuth2Scope.SNSAPI_USERINFO, URLEncoder.encode(returnUrl));
         log.error("【返回信息=】" + redirectUrl);
 
         return "redirect:" + redirectUrl;
@@ -41,9 +43,9 @@ public class WeChatController {
                            @RequestParam("state") String returnUrl) {
         WxMpOAuth2AccessToken wxMpOAuth2AccessToken = new WxMpOAuth2AccessToken();
         try {
-            wxMpOAuth2AccessToken = wxMpService.oauth2getAccessToken(code);
+            wxMpOAuth2AccessToken = wxService.oauth2getAccessToken(code);
         } catch (WxErrorException e) {
-            e.printStackTrace();
+            throw new ErrException(WECHAT_ERR.getCode(), WECHAT_ERR.getMessage());
         }
         String openId = wxMpOAuth2AccessToken.getOpenId();
         return "redirect:" + returnUrl + "?openid=" + openId;
