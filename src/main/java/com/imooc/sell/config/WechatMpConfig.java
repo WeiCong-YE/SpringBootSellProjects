@@ -1,5 +1,6 @@
 package com.imooc.sell.config;
 
+import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.mp.api.WxMpConfigStorage;
 import me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -9,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 @Component
+@Slf4j
 public class WechatMpConfig {
 
     @Autowired
@@ -23,8 +25,9 @@ public class WechatMpConfig {
     @Bean
     public WxMpConfigStorage wxMpConfigStorage() {
         WxMpInMemoryConfigStorage wxMpConfigStorage = new WxMpInMemoryConfigStorage();
-        wxMpConfigStorage.setAppId(wechatAccountConfig.getMaAppId());
-        wxMpConfigStorage.setSecret(wechatAccountConfig.getMaAppSecret());
+        wxMpConfigStorage.setAppId(wechatAccountConfig.getMpAppId());
+        wxMpConfigStorage.setSecret(wechatAccountConfig.getMpAppSecret());
+        log.info("【拿到的AppId={}，Secret={}】",wechatAccountConfig.getMpAppId(),wechatAccountConfig.getMpAppSecret());
         return wxMpConfigStorage;
     }
 }

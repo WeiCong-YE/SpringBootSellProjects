@@ -7,13 +7,16 @@ import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.net.URLEncoder;
 
 import static com.imooc.sell.enums.ResultEnum.WECHAT_ERR;
 
-@RestController
+@Controller
 @RequestMapping("/wechat")
 @Slf4j
 public class WeChatController {
@@ -44,5 +47,6 @@ public class WeChatController {
         }
         String openId = wxMpOAuth2AccessToken.getOpenId();
         return "redirect:" + returnUrl + "?openid=" + openId;
+
     }
 }
