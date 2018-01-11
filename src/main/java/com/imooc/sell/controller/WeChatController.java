@@ -5,32 +5,27 @@ import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
-import me.chanjar.weixin.mp.api.impl.WxMpServiceImpl;
 import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URLEncoder;
 
 import static com.imooc.sell.enums.ResultEnum.WECHAT_ERR;
 
-@Controller
+@RestController
 @RequestMapping("/wechat")
 @Slf4j
 public class WeChatController {
-
     @Autowired
-    private WxMpService wxService;
+    private WxMpService wxMpService;
 
     @GetMapping("/authorize")
-    public String authorize(@RequestParam("returnUrl") String returnUrl) {
+    public String authorize(@RequestParam(value = "returnUrl", required = false) String returnUrl) {
         // 配置
         String url = "http://linly.nat300.top/sell/wechat/userInfo";
         // 调用方法
-        String redirectUrl = wxService.oauth2buildAuthorizationUrl(url, WxConsts.OAuth2Scope.SNSAPI_USERINFO, URLEncoder.encode(returnUrl));
+        String redirectUrl = wxMpService.oauth2buildAuthorizationUrl(url, WxConsts.OAuth2Scope.SNSAPI_USERINFO, URLEncoder.encode(returnUrl));
         log.error("【返回信息=】" + redirectUrl);
 
         return "redirect:" + redirectUrl;
@@ -43,7 +38,7 @@ public class WeChatController {
                            @RequestParam("state") String returnUrl) {
         WxMpOAuth2AccessToken wxMpOAuth2AccessToken = new WxMpOAuth2AccessToken();
         try {
-            wxMpOAuth2AccessToken = wxService.oauth2getAccessToken(code);
+            wxMpOAuth2AccessToken = wxMpService.oauth2getAccessToken(code);
         } catch (WxErrorException e) {
             throw new ErrException(WECHAT_ERR.getCode(), WECHAT_ERR.getMessage());
         }
