@@ -4,6 +4,7 @@ package com.imooc.sell.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -14,6 +15,7 @@ import java.util.Arrays;
  */
 @RestController
 @Slf4j
+@ApiIgnore
 public class Test {
     private static final String TOKEN = "good";
     @RequestMapping(value = "/sell/test", method = RequestMethod.GET)

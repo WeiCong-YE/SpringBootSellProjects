@@ -9,6 +9,8 @@ import com.imooc.sell.dataoobject.ProductInfo;
 import com.imooc.sell.service.impl.CategoryServiceImpl;
 import com.imooc.sell.service.impl.ProductServiceImpl;
 import com.imooc.sell.utils.ResultVoUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/buyer/product")
 @Slf4j
+@Api( value = "买家接口",description = "商品管理模块")
 public class BuyerProductController {
 
 
@@ -33,6 +36,7 @@ public class BuyerProductController {
      *
      * @return
      */
+    @ApiOperation("查询商品列表")
     @GetMapping("/list")
     public ResultVO list() {
 //        1.查询所有的上架商品
