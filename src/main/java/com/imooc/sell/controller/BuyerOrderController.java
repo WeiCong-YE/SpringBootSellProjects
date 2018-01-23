@@ -10,26 +10,35 @@ import com.imooc.sell.form.OrderForm;
 import com.imooc.sell.service.BuyerService;
 import com.imooc.sell.service.OrderService;
 import com.imooc.sell.utils.ResultVoUtils;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.validation.Valid;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
+import springfox.documentation.annotations.ApiIgnore;
 
 
 @RestController
 @RequestMapping("/buyer/order")
 @Slf4j
-@Api( value = "买家接口",description = "订单管理模块")
+@Api(value = "买家接口", description = "订单管理模块")
 public class BuyerOrderController {
 
     @Autowired
@@ -70,9 +79,9 @@ public class BuyerOrderController {
      */
     @ApiOperation("查询订单接口")
     @GetMapping("/list")
-    public ResultVO list(@RequestParam(value = "openId", required = false) String openId,
-                         @RequestParam(value = "page", defaultValue = "0") Integer page,
-                         @RequestParam(value = "size", defaultValue = "10") Integer size) {
+    public ResultVO list(@ApiParam("openId") @RequestParam(value = "openId", required = false) String openId,
+                         @ApiParam("页码") @RequestParam(value = "page", defaultValue = "0") Integer page,
+                         @ApiParam("每次多少条") @RequestParam(value = "size", defaultValue = "10") Integer size) {
         if (StringUtils.isEmpty(openId)) {
             throw new ErrException(ResultEnum.LACK_OF_PARAMETERS.getCode(), ResultEnum.LACK_OF_PARAMETERS.getMessage());
         }
@@ -91,8 +100,8 @@ public class BuyerOrderController {
      */
     @ApiOperation("获取订单详情")
     @GetMapping("/detail")
-    public ResultVO detail(@RequestParam(value = "openId", required = false) String openid,
-                           @RequestParam(value = "orderId", required = false) String orderId) {
+    public ResultVO detail(@ApiParam("openId") @RequestParam(value = "openId", required = false) String openid,
+                           @ApiParam("订单Id") @RequestParam(value = "orderId", required = false) String orderId) {
         if (StringUtils.isEmpty(openid) || StringUtils.isEmpty(orderId)) {
             throw new ErrException(ResultEnum.LACK_OF_PARAMETERS.getCode(), ResultEnum.LACK_OF_PARAMETERS.getMessage());
         }
@@ -109,8 +118,8 @@ public class BuyerOrderController {
      */
     @ApiOperation("取消订单")
     @PostMapping("/cancel")
-    public ResultVO cancel(@RequestParam(value = "openId", required = false) String openId,
-                           @RequestParam(value = "orderId", required = false) String orderId) {
+    public ResultVO cancel(@ApiParam("openId") @RequestParam(value = "openId", required = false) String openId,
+                           @ApiParam("订单Id") @RequestParam(value = "orderId", required = false) String orderId) {
         if (StringUtils.isEmpty(openId) || StringUtils.isEmpty(orderId)) {
             throw new ErrException(ResultEnum.LACK_OF_PARAMETERS.getCode(), ResultEnum.LACK_OF_PARAMETERS.getMessage());
         }
@@ -121,8 +130,8 @@ public class BuyerOrderController {
 
     @PostMapping("/finish")
     @ApiIgnore
-    public ResultVO finish(@RequestParam(value = "openId", required = false) String openId,
-                           @RequestParam(value = "orderId", required = false) String orderId) {
+    public ResultVO finish(@ApiParam("openId") @RequestParam(value = "openId", required = false) String openId,
+                           @ApiParam("订单Id") @RequestParam(value = "orderId", required = false) String orderId) {
         if (StringUtils.isEmpty(openId) || StringUtils.isEmpty(orderId)) {
             throw new ErrException(ResultEnum.LACK_OF_PARAMETERS.getCode(), ResultEnum.LACK_OF_PARAMETERS.getMessage());
         }
@@ -132,8 +141,8 @@ public class BuyerOrderController {
 
     @PostMapping("/pay")
     @ApiIgnore
-    public ResultVO pay(@RequestParam(value = "openId", required = false) String openId,
-                        @RequestParam(value = "orderId", required = false) String orderId) {
+    public ResultVO pay(@ApiParam("openId") @RequestParam(value = "openId", required = false) String openId,
+                        @ApiParam("订单Id") @RequestParam(value = "orderId", required = false) String orderId) {
         if (StringUtils.isEmpty(openId) || StringUtils.isEmpty(orderId)) {
             throw new ErrException(ResultEnum.LACK_OF_PARAMETERS.getCode(), ResultEnum.LACK_OF_PARAMETERS.getMessage());
         }

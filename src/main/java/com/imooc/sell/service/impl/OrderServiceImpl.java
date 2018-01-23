@@ -13,6 +13,7 @@ import com.imooc.sell.exception.ErrException;
 import com.imooc.sell.repository.OrderDetailRepository;
 import com.imooc.sell.repository.OrderMasterRepository;
 import com.imooc.sell.service.OrderService;
+import com.imooc.sell.service.PayService;
 import com.imooc.sell.service.ProductService;
 import com.imooc.sell.utils.BeanUtils;
 import com.imooc.sell.utils.KeysUtils;
@@ -47,6 +48,8 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderMasterRepository orderMasterRepository;
 
+    @Autowired
+    private PayService mPayService;
     @Override
     @Transactional
     public OrderDto create(OrderDto orderDto) {
@@ -137,7 +140,7 @@ public class OrderServiceImpl implements OrderService {
 
         // 如果已经付款了 那么要退款
         if (orderDto.getPayStatus().equals(PayStatusEnum.SUCCESS.getCode())) {
-            // TODO: 2018/1/7   退款
+            mPayService.refund(orderDto);
         }
         return orderDto;
     }
