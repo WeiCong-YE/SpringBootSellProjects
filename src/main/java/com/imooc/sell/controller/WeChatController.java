@@ -22,7 +22,6 @@ import static com.imooc.sell.enums.ResultEnum.WECHAT_ERR;
 @Controller
 @RequestMapping("/wechat")
 @Slf4j
-
 @Api(value = "微信模块")
 public class WeChatController {
     @Autowired
