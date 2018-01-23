@@ -1,9 +1,14 @@
 package com.imooc.sell.dto;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.imooc.sell.dataoobject.OrderDetail;
+import com.imooc.sell.enums.OrderStatusEnum;
+import com.imooc.sell.enums.PayStatusEnum;
+import com.imooc.sell.utils.EnumUtils;
 import com.imooc.sell.utils.serializer.Date2LongSerializer;
+
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -28,4 +33,14 @@ public class OrderDto {
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
     private List<OrderDetail> orderDetailList;
+
+
+    @JsonIgnore
+    public OrderStatusEnum getOrderStatusEnum() {
+        return EnumUtils.getByCode(orderStatus, OrderStatusEnum.class);
+    }
+    @JsonIgnore
+    public PayStatusEnum getPayStatusEnum() {
+        return EnumUtils.getByCode(orderStatus, PayStatusEnum.class);
+    }
 }
