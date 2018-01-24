@@ -80,7 +80,9 @@
                         详情
                     </td>
                     <td>
-                        取消
+                        <#if orderDto.getOrderStatus()!=2>
+                        <a href="#">取消</a>
+                        </#if>
                     </td>
                 </tr>
                 </#list>
@@ -89,28 +91,37 @@
             </table>
         </div>
         <div style="align-content: center">
-            <ul class="pagination pagination-sm">
+            <ul class="pagination pagination-sm pull-right">
+
+                <#if currPage lte 1>
                 <li>
-                    <a href="#">Prev</a>
+                    <a href="#">上一页</a>
                 </li>
+                <#else >
+                 <li>
+                     <a href="/sell/seller/list?page=${currPage-1}&size=${size}">上一页</a>
+                 </li>
+                </#if>
+                <#list  1 ..pageResult.totalPages as index>
+                    <#if currPage==index >
+                             <li class="disabled"><a
+                                     href="/sell/seller/list?page=${index}&size=${size}">${index}</a>
+                             </li>
+                    <#else>
+                          <li><a href="/sell/seller/list?page=${index}&size=${size}">${index}</a>
+                          </li>
+                    </#if>
+
+                </#list>
+                <#if currPage gte pageResult.totalPages>
                 <li>
-                    <a href="#">1</a>
+                    <a href="#">下一页</a>
                 </li>
-                <li>
-                    <a href="#">2</a>
-                </li>
-                <li>
-                    <a href="#">3</a>
-                </li>
-                <li>
-                    <a href="#">4</a>
-                </li>
-                <li>
-                    <a href="#">5</a>
-                </li>
-                <li>
-                    <a href="#">Next</a>
-                </li>
+                <#else >
+                 <li>
+                     <a href="/sell/seller/list?page=${currPage+1}&size=${size}">下一页</a>
+                 </li>
+                </#if>
             </ul>
         </div>
     </div>
