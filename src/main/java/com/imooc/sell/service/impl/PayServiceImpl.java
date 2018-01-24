@@ -64,7 +64,6 @@ public class PayServiceImpl implements PayService {
         refundRequest.setOrderId(orderDto.getOrderId());
         refundRequest.setOrderAmount(orderDto.getOrderAmount().doubleValue());
         refundRequest.setPayTypeEnum(BestPayTypeEnum.WXPAY_H5);
-        RefundResponse refundResponse= mWechatPayConf.mBestPayService().refund(refundRequest);
-        return refundResponse;
+        return mWechatPayConf.mBestPayService().refund(refundRequest);
     }
 }
