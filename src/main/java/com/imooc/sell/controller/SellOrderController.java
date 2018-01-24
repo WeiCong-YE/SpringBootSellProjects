@@ -14,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -39,6 +40,9 @@ public class SellOrderController {
         Page<OrderDto> pageResult = mOrderService.findList(pageRequest);
         Map<String, Page<OrderDto>> map = new HashMap<>();
         map.put("pageResult", pageResult);
+
+        pageResult.getContent().forEach(orderDto -> log.info("[orderDto的枚举信息是{}]", orderDto.getOrderStatusEnum().getMessage()));
+
         return new ModelAndView("sell/list", map);
     }
 }

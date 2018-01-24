@@ -4,12 +4,10 @@ import lombok.Getter;
 
 @Getter
 public enum OrderStatusEnum implements CodeEnum {
-
-    NEW(0, "新订单"),
-
+    CANCEL(2, "取消"),
     FINISH(1, "完结"),
+    NEW(0, "新订单");
 
-    CANCEL(2, "取消");
 
     private Integer code;
     private String message;
