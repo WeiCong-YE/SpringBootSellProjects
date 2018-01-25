@@ -17,7 +17,8 @@ public enum ResultEnum {
     ORDER_PAY_STATUS_ERR(18, "订单支付状态异常"),
     WECHAT_ERR(19, "微信错误"),
     ORDER_AMOUNT_ERR(20,"订单金额错误"),
-    PAGE_SIZE_ERR(21,"分页参数错误");
+    ORDER_FINISH_ERR(21,"订单完结错误"),
+    PAGE_SIZE_ERR(22,"分页参数错误");
     private Integer code;
     private String message;
 

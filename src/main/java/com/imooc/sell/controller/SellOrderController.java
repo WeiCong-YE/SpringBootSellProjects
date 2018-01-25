@@ -6,6 +6,8 @@ import com.imooc.sell.enums.ResultEnum;
 import com.imooc.sell.exception.ErrException;
 import com.imooc.sell.service.OrderService;
 
+import org.hibernate.criterion.Order;
+import org.hibernate.dialect.HANAColumnStoreDialect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import io.swagger.annotations.Api;
@@ -26,9 +29,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 
-import static com.imooc.sell.enums.ResultEnum.LACK_OF_PARAMETERS;
-import static com.imooc.sell.enums.ResultEnum.ORDER_NOT_EXIST;
-import static com.imooc.sell.enums.ResultEnum.PAGE_SIZE_ERR;
+import static com.imooc.sell.enums.ResultEnum.*;
 
 /**
  * 卖家信息
@@ -61,7 +62,7 @@ public class SellOrderController {
 
     @GetMapping("cancel")
     @ApiOperation("取消订单")
-    public ModelAndView cancel(@ApiParam("订单ID") String orderId, HashMap<String, Object> hashMap) {
+    public ModelAndView cancel(@ApiParam("订单ID") @RequestParam(value = "orderId", required = false) String orderId, HashMap<String, Object> hashMap) {
         String returnUrl = "list";
         if (StringUtils.isEmpty(orderId)) {
             hashMap.put("msg", LACK_OF_PARAMETERS.getMessage());
@@ -97,7 +98,7 @@ public class SellOrderController {
      */
     @GetMapping("detail")
     @ApiOperation("订单详情")
-    public ModelAndView detail(@ApiParam("订单id") @RequestParam("orderId") String orderId, HashMap<String, Object> hashMap) {
+    public ModelAndView detail(@ApiParam("订单id") @RequestParam(value = "orderId", required = false) String orderId, HashMap<String, Object> hashMap) {
         String returnUrl = "list";
         if (StringUtils.isEmpty(orderId)) {
             hashMap.put("msg", LACK_OF_PARAMETERS.getMessage());
@@ -112,5 +113,40 @@ public class SellOrderController {
         }
         hashMap.put("orderDTO", orderDto);
         return new ModelAndView("sell/detail", hashMap);
+    }
+
+
+    @GetMapping("finish")
+    @ApiOperation("完结订单")
+    public ModelAndView finish(@ApiParam("订单id") @RequestParam(value = "orderId", required = false) String orderId,
+                               HashMap<String, Object> hashMap) {
+        String returnUrl = "list";
+        if (StringUtils.isEmpty(orderId)) {
+            hashMap.put("msg", LACK_OF_PARAMETERS.getMessage());
+            hashMap.put("url", returnUrl);
+            return new ModelAndView("comment/error", hashMap);
+        }
+        OrderDto orderDto = mOrderService.findOne(orderId);
+        if (orderDto == null) {
+            hashMap.put("msg", ORDER_NOT_EXIST.getMessage());
+            hashMap.put("url", returnUrl);
+            return new ModelAndView("comment/error", hashMap);
+        }
+        OrderDto result;
+        try {
+            result = mOrderService.finish(orderDto);
+        } catch (ErrException e) {
+            hashMap.put("msg", e.getMsg());
+            hashMap.put("url", returnUrl);
+            return new ModelAndView("comment/error", hashMap);
+        }
+        if (!Objects.equals(result.getOrderStatus(), OrderStatusEnum.FINISH.getCode())) {
+            hashMap.put("msg", ORDER_FINISH_ERR.getMessage());
+            hashMap.put("url", returnUrl);
+            return new ModelAndView("comment/error", hashMap);
+        }
+        hashMap.put("msg", "订单完结成功");
+        hashMap.put("url", returnUrl);
+        return new ModelAndView("comment/success", hashMap);
     }
 }
