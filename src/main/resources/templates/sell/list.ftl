@@ -77,11 +77,12 @@
                         ${orderDto.createTime}
                     </td>
                     <td>
-                        详情
+                        <a href="detail?orderId=${orderDto.orderId}">详情</a>
+
                     </td>
                     <td>
                         <#if orderDto.getOrderStatus()!=2>
-                        <a href="#">取消</a>
+                        <a href="cancel?orderId=${orderDto.orderId}">取消</a>
                         </#if>
                     </td>
                 </tr>
