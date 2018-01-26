@@ -6,14 +6,15 @@ import com.imooc.sell.VO.ResultVO;
  * 成功结果的返回封装
  */
 public class ResultVoUtils {
+
     /**
      * 成功封装
      *
      * @param o
      * @return ResultVO
      */
-    public static ResultVO<Object> success(Object o) {
-        ResultVO<Object> resultVO = new ResultVO<>();
+    public static <T>ResultVO success(T o) {
+        ResultVO<T> resultVO = new ResultVO<>();
         resultVO.setData(o);
         resultVO.setCode(0);
         resultVO.setMessage("成功");
@@ -24,7 +25,7 @@ public class ResultVoUtils {
      * 成功 但是data没有返回值的方法
      * @return ResultVO
      */
-    public static ResultVO<Object> success() {
+    public static ResultVO success() {
         return success(null);
     }
 

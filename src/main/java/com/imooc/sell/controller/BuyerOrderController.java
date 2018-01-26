@@ -55,7 +55,7 @@ public class BuyerOrderController {
      */
     @ApiOperation("创建订单")
     @PostMapping("/create")
-    public ResultVO create(@RequestBody @Valid OrderForm orderForm, BindingResult bindingResult) {
+    public ResultVO create( @Valid OrderForm orderForm, BindingResult bindingResult) {
         log.error("【接口参数】" + orderForm);
         if (bindingResult.hasErrors()) {
             throw new ErrException(ResultEnum.LACK_OF_PARAMETERS.getCode(), ResultEnum.LACK_OF_PARAMETERS.getMessage());

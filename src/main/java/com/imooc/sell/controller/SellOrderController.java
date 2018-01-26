@@ -118,7 +118,8 @@ public class SellOrderController {
 
     @GetMapping("finish")
     @ApiOperation("完结订单")
-    public ModelAndView finish(@ApiParam("订单id") @RequestParam(value = "orderId", required = false) String orderId,
+    public ModelAndView finish(@ApiParam("订单id") @RequestParam(value = "orderId", required = false)
+                                           String orderId,
                                HashMap<String, Object> hashMap) {
         String returnUrl = "list";
         if (StringUtils.isEmpty(orderId)) {

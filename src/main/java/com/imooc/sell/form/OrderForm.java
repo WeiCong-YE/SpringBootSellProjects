@@ -1,8 +1,6 @@
 package com.imooc.sell.form;
 
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.annotations.ApiParam;
 import lombok.Data;
 
 import org.hibernate.validator.constraints.NotEmpty;
