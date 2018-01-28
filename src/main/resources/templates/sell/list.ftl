@@ -80,7 +80,7 @@
                         详情
                     </td>
                     <td>
-                        <#if orderDto.getOrderStatus()!=2>
+                        <#if orderDto.getOrderStatus() !=2>
                         <a href="#">取消</a>
                         </#if>
                     </td>
