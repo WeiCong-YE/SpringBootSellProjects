@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 /**
  * 买家
  */
-@Service
 public interface BuyerService {
 
     OrderDto findOrderOne(String openId, String orderId);
