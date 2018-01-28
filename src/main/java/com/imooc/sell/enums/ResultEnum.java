@@ -18,11 +18,13 @@ public enum ResultEnum {
     WECHAT_ERR(19, "微信错误"),
     ORDER_AMOUNT_ERR(20,"订单金额错误"),
     ORDER_FINISH_ERR(21,"订单完结错误"),
-    BANNER_IS_NOT_EXIT(22,"该数据不存在"),
-    BANNER_IS_ADD_ERROR(23,"添加数据出错"),
+    THE_ONE_IS_NOT_EXIT(22,"该数据不存在"),
+    THE_ONE_IS_ADD_ERROR(23,"添加数据出错"),
     PAGE_SIZE_ERR(24,"分页参数错误"),
-    BANNER_UPDATE_ERR(25,"数据更新失败"),
-    BANNER_DELETE_ERROR(26,"数据删除失败");
+    THE_ONE_UPDATE_ERR(25,"数据更新失败"),
+    THE_ONE_DELETE_ERROR(26,"数据删除失败"),
+    THE_ONE_IS_EXIST(27,"该数据已经存在了"),
+    THE_ONE_STATUS_ERR(27,"该数据状态错误");
     private Integer code;
     private String message;
 

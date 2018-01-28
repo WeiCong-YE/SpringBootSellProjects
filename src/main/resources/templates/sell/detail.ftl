@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>商品详情</title>
-    <link href="https://cdn.bootcss.com/bootstrap/3.0.1/css/bootstrap.min.css" rel="stylesheet">
-</head>
+<#include "../comment/header.ftl">
 <body>
 <div id="wrapper" class="toggled">
+
+<#--边栏布局-->
+    <#include "../comment/nav.ftl">
+<#--主体布局-->
     <div id="page-content-wrapper">
         <div class="container">
             <div class="row clearfix">
@@ -56,8 +56,10 @@
             <#--操作-->
                 <div class="col-md-12 column">
                 <#if orderDTO.getOrderStatusEnum().message == "新订单">
-                    <a href="/sell/seller/order/finish?orderId=${orderDTO.orderId}" type="button" class="btn btn-default btn-primary">完结订单</a>
-                    <a href="/sell/seller/order/cancel?orderId=${orderDTO.orderId}" type="button" class="btn btn-default btn-danger">取消订单</a>
+                    <a href="finish?orderId=${orderDTO.orderId}" type="button"
+                       class="btn btn-default btn-primary">完结订单</a>
+                    <a href="cancel?orderId=${orderDTO.orderId}" type="button"
+                       class="btn btn-default btn-danger">取消订单</a>
                 </#if>
                 </div>
             </div>

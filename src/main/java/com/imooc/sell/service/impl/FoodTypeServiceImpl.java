@@ -7,17 +7,21 @@ import com.imooc.sell.form.FoodUpdateForm;
 import com.imooc.sell.repository.FoodTypeRepository;
 import com.imooc.sell.service.FoodTypeService;
 import com.imooc.sell.utils.BeanUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.imooc.sell.enums.ResultEnum.BANNER_IS_NOT_EXIT;
-import static com.imooc.sell.enums.ResultEnum.BANNER_UPDATE_ERR;
+import lombok.extern.slf4j.Slf4j;
+
+import static com.imooc.sell.enums.ResultEnum.THE_ONE_IS_NOT_EXIT;
+import static com.imooc.sell.enums.ResultEnum.THE_ONE_UPDATE_ERR;
+import static com.imooc.sell.enums.ResultEnum.THE_ONE_IS_EXIST;
 
 @Service
+@Slf4j
 public class FoodTypeServiceImpl implements FoodTypeService {
     @Autowired
     private FoodTypeRepository foodTypeRepository;
@@ -30,6 +34,9 @@ public class FoodTypeServiceImpl implements FoodTypeService {
 
     @Override
     public FoodType addFoodType(FoodAddForm foodAddForm) {
+        if (IsExistBySortFlag(foodAddForm.getSortFlag())) {
+            throw new ErrException(THE_ONE_IS_EXIST.getCode(), THE_ONE_IS_EXIST.getMessage());
+        }
         FoodType foodType = new FoodType();
         BeanUtils.copyNonNullProperties(foodAddForm, foodType);
         return foodTypeRepository.save(foodType);
@@ -37,14 +44,19 @@ public class FoodTypeServiceImpl implements FoodTypeService {
 
     @Override
     public FoodType updateFoodType(FoodUpdateForm foodUpdateForm) {
-        FoodType foodType = foodTypeRepository.findOne(foodUpdateForm.getId());
-        if (foodType == null) {
-            throw new ErrException(BANNER_IS_NOT_EXIT.getCode(), BANNER_IS_NOT_EXIT.getMessage());
+        FoodType foodTypeById = foodTypeRepository.findById(foodUpdateForm.getId());
+        if (foodTypeById == null) {
+            throw new ErrException(THE_ONE_IS_NOT_EXIT.getCode(), THE_ONE_IS_NOT_EXIT.getMessage());
         }
-        BeanUtils.copyNonNullProperties(foodUpdateForm, foodType);
-        FoodType result = foodTypeRepository.save(foodType);
+        if (!foodTypeById.getSortFlag().equals(foodUpdateForm.getSortFlag())) {
+            if (IsExistBySortFlag(foodUpdateForm.getSortFlag())) {
+                throw new ErrException(THE_ONE_IS_EXIST.getCode(), THE_ONE_IS_EXIST.getMessage());
+            }
+        }
+        BeanUtils.copyNonNullProperties(foodUpdateForm, foodTypeById);
+        FoodType result = foodTypeRepository.save(foodTypeById);
         if (result == null) {
-            throw new ErrException(BANNER_UPDATE_ERR.getCode(), BANNER_UPDATE_ERR.getMessage());
+            throw new ErrException(THE_ONE_UPDATE_ERR.getCode(), THE_ONE_UPDATE_ERR.getMessage());
         } else {
             return result;
         }
@@ -52,12 +64,19 @@ public class FoodTypeServiceImpl implements FoodTypeService {
 
     @Override
     public Boolean deleteFoodType(Integer id) {
-        FoodType foodType = foodTypeRepository.findOne(id);
+        FoodType foodType = foodTypeRepository.findById(id);
+        log.error("【找到的数据={}】", foodType);
         if (foodType == null) {
-            throw new ErrException(BANNER_IS_NOT_EXIT.getCode(), BANNER_IS_NOT_EXIT.getMessage());
+            throw new ErrException(THE_ONE_IS_NOT_EXIT.getCode(), THE_ONE_IS_NOT_EXIT.getMessage());
         }
         foodTypeRepository.delete(foodType);
         FoodType result = foodTypeRepository.findOne(id);
         return result == null;
+    }
+
+    @Override
+    public Boolean IsExistBySortFlag(Integer sortFlag) {
+        FoodType result = foodTypeRepository.findBySortFlag(sortFlag);
+        return result != null;
     }
 }

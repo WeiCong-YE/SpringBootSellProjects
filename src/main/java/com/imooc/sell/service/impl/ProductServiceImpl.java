@@ -7,6 +7,7 @@ import com.imooc.sell.enums.ResultEnum;
 import com.imooc.sell.exception.ErrException;
 import com.imooc.sell.repository.ProductInfoRepository;
 import com.imooc.sell.service.ProductService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static com.imooc.sell.enums.ResultEnum.THE_ONE_IS_NOT_EXIT;
+import static com.imooc.sell.enums.ResultEnum.THE_ONE_STATUS_ERR;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -80,5 +84,31 @@ public class ProductServiceImpl implements ProductService {
             productInfo.setProductStock(result);
             productInfoRepository.save(productInfo);
         }
+    }
+
+    @Override
+    public ProductInfo offSale(String id) {
+        ProductInfo productInfo = findOne(id);
+        if (productInfo == null) {
+            throw new ErrException(THE_ONE_IS_NOT_EXIT.getCode(), THE_ONE_IS_NOT_EXIT.getMessage());
+        }
+        if (productInfo.getProductStatusEnum() != ProductStatusEnum.UP) {
+            throw new ErrException(THE_ONE_STATUS_ERR.getCode(), THE_ONE_STATUS_ERR.getMessage());
+        }
+        productInfo.setProductStatus(ProductStatusEnum.DOWN.getCode());
+        return save(productInfo);
+    }
+
+    @Override
+    public ProductInfo onSale(String id) {
+        ProductInfo productInfo = findOne(id);
+        if (productInfo == null) {
+            throw new ErrException(THE_ONE_IS_NOT_EXIT.getCode(), THE_ONE_IS_NOT_EXIT.getMessage());
+        }
+        if (productInfo.getProductStatusEnum() != ProductStatusEnum.DOWN) {
+            throw new ErrException(THE_ONE_STATUS_ERR.getCode(), THE_ONE_STATUS_ERR.getMessage());
+        }
+        productInfo.setProductStatus(ProductStatusEnum.UP.getCode());
+        return save(productInfo);
     }
 }

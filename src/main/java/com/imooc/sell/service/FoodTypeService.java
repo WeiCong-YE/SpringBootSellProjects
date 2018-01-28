@@ -15,4 +15,6 @@ public interface FoodTypeService {
     FoodType updateFoodType(FoodUpdateForm foodUpdateForm);
 
     Boolean deleteFoodType(Integer id);
+
+    Boolean IsExistBySortFlag(Integer sortFlag);
 }

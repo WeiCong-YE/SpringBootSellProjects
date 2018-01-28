@@ -49,7 +49,7 @@ public class BannerController {
         }
         Banner banner = bannerService.findBannerById(bannerId);
         if (banner == null) {
-            return ResultVoUtils.error(BANNER_IS_NOT_EXIT.getCode(), BANNER_IS_NOT_EXIT.getMessage());
+            return ResultVoUtils.error(THE_ONE_IS_NOT_EXIT.getCode(), THE_ONE_IS_NOT_EXIT.getMessage());
         }
         return ResultVoUtils.success(banner);
     }
@@ -62,24 +62,24 @@ public class BannerController {
         }
         Banner result = bannerService.addBanner(bannerForm);
         if (result == null) {
-            throw new ErrException(BANNER_IS_ADD_ERROR.getCode(), BANNER_IS_ADD_ERROR.getMessage());
+            throw new ErrException(THE_ONE_IS_ADD_ERROR.getCode(), THE_ONE_IS_ADD_ERROR.getMessage());
         }
         return ResultVoUtils.success(result);
     }
 
     @DeleteMapping("deleteBanner")
     @ApiOperation("根据Id删除Banner")
-    public ResultVO deleteBanner(@ApiParam("bannerId") @RequestParam Integer bannerId) {
+    public ResultVO deleteBanner(@ApiParam("Banner 的ID") @RequestParam Integer bannerId) {
         if (bannerId == null) {
             throw new ErrException(LACK_OF_PARAMETERS.getCode(), LACK_OF_PARAMETERS.getMessage());
         }
         if (bannerService.findBannerById(bannerId) == null) {
-            throw new ErrException(BANNER_IS_NOT_EXIT.getCode(), BANNER_IS_NOT_EXIT.getMessage());
+            throw new ErrException(THE_ONE_IS_NOT_EXIT.getCode(), THE_ONE_IS_NOT_EXIT.getMessage());
         }
         if (bannerService.deleteBanner(bannerId)) {
             return ResultVoUtils.success();
         } else {
-            return ResultVoUtils.error(BANNER_DELETE_ERROR.getCode(), BANNER_DELETE_ERROR.getMessage());
+            return ResultVoUtils.error(THE_ONE_DELETE_ERROR.getCode(), THE_ONE_DELETE_ERROR.getMessage());
         }
     }
 
@@ -95,7 +95,7 @@ public class BannerController {
         BeanUtils.copyNonNullProperties(bannerForm, banner);
         Banner result = bannerService.updateBanner(banner);
         if (result == null) {
-            return ResultVoUtils.error(BANNER_UPDATE_ERR.getCode(), BANNER_UPDATE_ERR.getMessage());
+            return ResultVoUtils.error(THE_ONE_UPDATE_ERR.getCode(), THE_ONE_UPDATE_ERR.getMessage());
         } else {
             return ResultVoUtils.success(result);
         }

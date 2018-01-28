@@ -15,31 +15,31 @@
                         <thead>
                         <tr>
                             <th>
-                                订单ID
+                                商品ID
                             </th>
                             <th>
-                                姓名
+                                名称
                             </th>
                             <th>
-                                手机号码
+                                图片
                             </th>
                             <th>
-                                地址
+                                单价
                             </th>
                             <th>
-                                金额
+                                库存
                             </th>
                             <th>
-                                订单状态
+                                描述
                             </th>
                             <th>
-                                支付方式
-                            </th>
-                            <th>
-                                支付状态
+                                类目
                             </th>
                             <th>
                                 创建时间
+                            </th>
+                            <th>
+                                修改时间
                             </th>
                             <th colspan="2">
                                 操作
@@ -48,47 +48,51 @@
                         </thead>
                         <tbody>
 
-                <#list pageResult.content as orderDto>
+                <#list productInfoPage.content as ProductInfo>
                 <tr>
                     <td>
-                        ${orderDto.orderId}
+                        ${ProductInfo.productId}
                     </td>
                     <td>
-                        ${orderDto.buyerName}
+                        ${ProductInfo.productName}
                     </td>
                     <td>
-                        ${orderDto.buyerPhone}
+                        <img src="${ProductInfo.productIcon}" width="90" height="90"/>
                     </td>
                     <td>
-                        ${orderDto.buyerAddress}
+                        ${ProductInfo.productPrice}
                     </td>
                     <td>
-                        ${orderDto.orderAmount}
+                        ${ProductInfo.productStock}
                     </td>
                     <td>
-                        ${orderDto.getOrderStatusEnum().getMessage()}
+                        ${ProductInfo.getProductDescription()}
                     </td>
                     <td>
-                        微信
+                        ${ProductInfo.categoryType}
                     </td>
                     <td>
-                        ${orderDto.getPayStatusEnum().getMessage()}
+                        ${ProductInfo.createTime}
                     </td>
                     <td>
-                        ${orderDto.createTime}
+                        ${ProductInfo.updateTime}
                     </td>
                     <td>
-                        <a href="detail?orderId=${orderDto.orderId}">详情</a>
-
+                        <a href="#">修改</a>
                     </td>
                     <td>
-                        <#if orderDto.getOrderStatus() !=2>
-                            <a href="#">取消</a>
+                         <#assign hrefUrl="/sell/products/on_sale?id=${ProductInfo.productId}"/>
+                        <#if ProductInfo.getProductStatusEnum().getCode()==1>
+                        <#--上架-->
+                            <#assign hrefUrl="/sell/products/on_sale?id=${ProductInfo.productId}"/>
+                        <#else >
+                        <#--下架-->
+                            <#assign hrefUrl="/sell/products/off_sale?id=${ProductInfo.productId}"/>
                         </#if>
+                        <a href="${hrefUrl}">${ProductInfo.getProductStatusEnum().getMessage()}</a>
                     </td>
                 </tr>
                 </#list>
-
                         </tbody>
                     </table>
                 </div>
@@ -101,27 +105,27 @@
                 </li>
                 <#else >
                  <li>
-                     <a href="/sell/seller/list?page=${currPage-1}&size=${size}">上一页</a>
+                     <a href="/sell/products/list?page=${currPage-1}&size=${size}">上一页</a>
                  </li>
                 </#if>
-                <#list  1 ..pageResult.totalPages as index>
+                <#list  1 ..productInfoPage.totalPages as index>
                     <#if currPage==index >
                              <li class="disabled"><a
-                                     href="/sell/seller/list?page=${index}&size=${size}">${index}</a>
+                                     href="/sell/products/list?page=${index}&size=${size}">${index}</a>
                              </li>
                     <#else>
-                          <li><a href="/sell/seller/list?page=${index}&size=${size}">${index}</a>
+                          <li><a href="/sell/products/list?page=${index}&size=${size}">${index}</a>
                           </li>
                     </#if>
 
                 </#list>
-                <#if currPage gte pageResult.totalPages>
+                <#if currPage gte productInfoPage.totalPages>
                 <li>
                     <a href="#">下一页</a>
                 </li>
                 <#else >
                  <li>
-                     <a href="/sell/seller/list?page=${currPage+1}&size=${size}">下一页</a>
+                     <a href="/sell/products/list?page=${currPage+1}&size=${size}">下一页</a>
                  </li>
                 </#if>
                     </ul>

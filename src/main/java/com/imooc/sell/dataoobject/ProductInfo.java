@@ -1,10 +1,17 @@
 package com.imooc.sell.dataoobject;
 
+import com.imooc.sell.enums.ProductStatusEnum;
+import com.imooc.sell.utils.EnumUtils;
+
 import lombok.Data;
+import springfox.documentation.annotations.ApiIgnore;
+
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -63,5 +70,17 @@ public class ProductInfo {
         this.productIcon = productIcon;
         this.productStatus = productStatus;
         this.categoryType = categoryType;
+    }
+
+    public ProductStatusEnum getProductStatusEnum(){
+        return EnumUtils.getByCode(productStatus,ProductStatusEnum.class);
+    }
+    @ApiIgnore
+    public String getProductStatus() {
+        if (productStatus == 1) {
+            return "上架";
+        } else {
+            return "下架";
+        }
     }
 }
