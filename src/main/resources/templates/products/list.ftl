@@ -78,7 +78,7 @@
                         ${ProductInfo.updateTime}
                     </td>
                     <td>
-                        <a href="#">修改</a>
+                        <a href="/sell/products/index?productId=${ProductInfo.productId}">修改</a>
                     </td>
                     <td>
                          <#assign hrefUrl="/sell/products/on_sale?id=${ProductInfo.productId}"/>

@@ -1,36 +1,53 @@
 package com.imooc.sell.controller;
 
+import com.imooc.sell.dataoobject.ProductCategory;
 import com.imooc.sell.dataoobject.ProductInfo;
 import com.imooc.sell.exception.ErrException;
+import com.imooc.sell.form.ProductAddForm;
+import com.imooc.sell.service.CategoryService;
 import com.imooc.sell.service.ProductService;
+import com.imooc.sell.utils.BeanUtils;
 import com.sun.xml.internal.bind.v2.model.core.ID;
 
+import org.apache.http.util.TextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.jws.WebParam;
+import javax.validation.Valid;
 import javax.ws.rs.GET;
 
 import io.swagger.annotations.ApiOperation;
+import lombok.Value;
+import lombok.extern.slf4j.Slf4j;
 
 import static com.imooc.sell.enums.ResultEnum.LACK_OF_PARAMETERS;
 import static com.imooc.sell.enums.ResultEnum.PAGE_SIZE_ERR;
+import static com.imooc.sell.enums.ResultEnum.THE_ONE_IS_NOT_EXIT;
 
 @Controller
 @RequestMapping("/products")
+@Slf4j
 public class SellProductsController {
 
     @Autowired
     private ProductService mProductService;
+
+    @Autowired
+    private CategoryService mCategoryService;
 
     @GetMapping("list")
     @ApiOperation("获取所有的商品列表")
@@ -94,6 +111,55 @@ public class SellProductsController {
             return new ModelAndView("comment/error");
         }
         map.put("msg", "下架成功");
+        map.put("url", "list");
+        return new ModelAndView("comment/success");
+    }
+
+    @GetMapping("index")
+    @ApiOperation("详情")
+    public ModelAndView index(@RequestParam(required = false)
+                                      String productId, Map<String, Object> map) {
+        if (TextUtils.isEmpty(productId)) {
+            map.put("msg", LACK_OF_PARAMETERS.getMessage());
+            map.put("url", "list");
+            return new ModelAndView("comment/error");
+        }
+        ProductInfo productInfo = mProductService.findOne(productId);
+        if (productInfo == null) {
+            map.put("msg", THE_ONE_IS_NOT_EXIT.getMessage());
+            map.put("url", "list");
+            return new ModelAndView("comment/error");
+        }
+        map.put("productInfo", productInfo);
+        List<ProductCategory> productCategories = mCategoryService.findAll();
+        map.put("categoryList", productCategories);
+        log.info("the product info is {}", productInfo.toString());
+        log.info("the categoryList info is {}", productCategories.toString());
+
+        return new ModelAndView("products/index", map);
+    }
+
+    @PostMapping("save")
+    @ApiOperation("保存")
+    public ModelAndView save(@Valid ProductAddForm productAddForm, BindingResult bindingResult,
+                             Map<String, Object> map) {
+        log.info("数据是{}", productAddForm.toString());
+        if (bindingResult.hasErrors()) {
+            map.put("msg", THE_ONE_IS_NOT_EXIT.getMessage());
+            map.put("url", "list");
+            return new ModelAndView("comment/error");
+        }
+        try {
+            ProductInfo target = mProductService.findOne(productAddForm.getProductId());
+            log.info("target{}", target.toString());
+            BeanUtils.copyNonNullProperties(productAddForm, target);
+            mProductService.save(target);
+        } catch (Exception e) {
+            map.put("msg", e.getMessage());
+            map.put("url", "list");
+            return new ModelAndView("comment/error");
+        }
+        map.put("msg", "修改成功");
         map.put("url", "list");
         return new ModelAndView("comment/success");
     }
