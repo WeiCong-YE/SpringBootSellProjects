@@ -2,11 +2,13 @@ package com.imooc.sell.controller;
 
 import com.imooc.sell.dataoobject.ProductCategory;
 import com.imooc.sell.dataoobject.ProductInfo;
+import com.imooc.sell.enums.ProductStatusEnum;
 import com.imooc.sell.exception.ErrException;
 import com.imooc.sell.form.ProductAddForm;
 import com.imooc.sell.service.CategoryService;
 import com.imooc.sell.service.ProductService;
 import com.imooc.sell.utils.BeanUtils;
+import com.imooc.sell.utils.KeysUtils;
 import com.sun.xml.internal.bind.v2.model.core.ID;
 
 import org.apache.http.util.TextUtils;
@@ -85,7 +87,7 @@ public class SellProductsController {
             throw new ErrException(LACK_OF_PARAMETERS.getCode(), LACK_OF_PARAMETERS.getMessage());
         }
         try {
-            ProductInfo result = mProductService.onSale(id);
+            mProductService.onSale(id);
         } catch (Exception e) {
             map.put("msg", e.getMessage());
             map.put("url", "list");
@@ -104,7 +106,7 @@ public class SellProductsController {
             throw new ErrException(LACK_OF_PARAMETERS.getCode(), LACK_OF_PARAMETERS.getMessage());
         }
         try {
-            ProductInfo result = mProductService.offSale(id);
+            mProductService.offSale(id);
         } catch (Exception e) {
             map.put("msg", e.getMessage());
             map.put("url", "list");
@@ -115,27 +117,22 @@ public class SellProductsController {
         return new ModelAndView("comment/success");
     }
 
+
     @GetMapping("index")
     @ApiOperation("详情")
     public ModelAndView index(@RequestParam(required = false)
                                       String productId, Map<String, Object> map) {
-        if (TextUtils.isEmpty(productId)) {
-            map.put("msg", LACK_OF_PARAMETERS.getMessage());
-            map.put("url", "list");
-            return new ModelAndView("comment/error");
+        if (!TextUtils.isEmpty(productId)) {
+            ProductInfo productInfo = mProductService.findOne(productId);
+            if (productInfo == null) {
+                map.put("msg", THE_ONE_IS_NOT_EXIT.getMessage());
+                map.put("url", "list");
+                return new ModelAndView("comment/error");
+            }
+            map.put("productInfo", productInfo);
         }
-        ProductInfo productInfo = mProductService.findOne(productId);
-        if (productInfo == null) {
-            map.put("msg", THE_ONE_IS_NOT_EXIT.getMessage());
-            map.put("url", "list");
-            return new ModelAndView("comment/error");
-        }
-        map.put("productInfo", productInfo);
         List<ProductCategory> productCategories = mCategoryService.findAll();
         map.put("categoryList", productCategories);
-        log.info("the product info is {}", productInfo.toString());
-        log.info("the categoryList info is {}", productCategories.toString());
-
         return new ModelAndView("products/index", map);
     }
 
@@ -143,24 +140,29 @@ public class SellProductsController {
     @ApiOperation("保存")
     public ModelAndView save(@Valid ProductAddForm productAddForm, BindingResult bindingResult,
                              Map<String, Object> map) {
-        log.info("数据是{}", productAddForm.toString());
+        map.put("url", "list");
         if (bindingResult.hasErrors()) {
             map.put("msg", THE_ONE_IS_NOT_EXIT.getMessage());
-            map.put("url", "list");
+
             return new ModelAndView("comment/error");
         }
-        try {
-            ProductInfo target = mProductService.findOne(productAddForm.getProductId());
-            log.info("target{}", target.toString());
+        ProductInfo target = new ProductInfo();
+        if (!StringUtils.isEmpty(productAddForm.getProductId())) {
+            try {
+                target = mProductService.findOne(productAddForm.getProductId());
+                BeanUtils.copyNonNullProperties(productAddForm, target);
+                map.put("msg", "修改成功");
+            } catch (Exception e) {
+                map.put("msg", e.getMessage());
+                return new ModelAndView("comment/error");
+            }
+        } else {
             BeanUtils.copyNonNullProperties(productAddForm, target);
-            mProductService.save(target);
-        } catch (Exception e) {
-            map.put("msg", e.getMessage());
-            map.put("url", "list");
-            return new ModelAndView("comment/error");
+            target.setProductId(KeysUtils.getUniqueKey());
+            target.setProductStatus(ProductStatusEnum.UP.getCode());
+            map.put("msg", "添加成功");
         }
-        map.put("msg", "修改成功");
-        map.put("url", "list");
+        mProductService.save(target);
         return new ModelAndView("comment/success");
     }
 }

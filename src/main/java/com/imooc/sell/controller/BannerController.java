@@ -28,8 +28,6 @@ import static com.imooc.sell.enums.ResultEnum.*;
 @Api("首页Banner图")
 @Slf4j
 public class BannerController {
-
-
     @Autowired
     private BannerService bannerService;
 

@@ -78,7 +78,7 @@
                         ${ProductInfo.updateTime}
                     </td>
                     <td>
-                        <a href="/sell/products/index?productId=${ProductInfo.productId}">修改</a>
+                        <a class="btn btn-info btn-lg" href="/sell/products/index?productId=${ProductInfo.productId}">修改</a>
                     </td>
                     <td>
                          <#assign hrefUrl="/sell/products/on_sale?id=${ProductInfo.productId}"/>
@@ -89,7 +89,7 @@
                         <#--下架-->
                             <#assign hrefUrl="/sell/products/off_sale?id=${ProductInfo.productId}"/>
                         </#if>
-                        <a href="${hrefUrl}">${ProductInfo.getProductStatusEnum().getMessage()}</a>
+                        <a class="btn btn-info btn-lg" href="${hrefUrl}">${ProductInfo.getProductStatusEnum().getMessage()}</a>
                     </td>
                 </tr>
                 </#list>

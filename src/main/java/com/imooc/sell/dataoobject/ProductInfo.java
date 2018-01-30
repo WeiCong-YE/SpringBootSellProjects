@@ -4,12 +4,16 @@ import com.imooc.sell.enums.ProductStatusEnum;
 import com.imooc.sell.utils.EnumUtils;
 
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import springfox.documentation.annotations.ApiIgnore;
 
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.Id;
 
 import java.math.BigDecimal;
@@ -54,7 +58,6 @@ public class ProductInfo {
      * 类目编码
      */
     private Integer categoryType;
-
     private Date createTime;
     private Date updateTime;
 
@@ -72,15 +75,7 @@ public class ProductInfo {
         this.categoryType = categoryType;
     }
 
-    public ProductStatusEnum getProductStatusEnum(){
-        return EnumUtils.getByCode(productStatus,ProductStatusEnum.class);
-    }
-    @ApiIgnore
-    public String getProductStatus() {
-        if (productStatus == 1) {
-            return "上架";
-        } else {
-            return "下架";
-        }
+    public ProductStatusEnum getProductStatusEnum() {
+        return EnumUtils.getByCode(productStatus, ProductStatusEnum.class);
     }
 }

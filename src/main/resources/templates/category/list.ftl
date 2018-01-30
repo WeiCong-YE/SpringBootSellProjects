@@ -15,31 +15,19 @@
                         <thead>
                         <tr>
                             <th>
-                                订单ID
+                                类目ID
                             </th>
                             <th>
-                                姓名
+                                名称
                             </th>
                             <th>
-                                手机号码
-                            </th>
-                            <th>
-                                地址
-                            </th>
-                            <th>
-                                金额
-                            </th>
-                            <th>
-                                订单状态
-                            </th>
-                            <th>
-                                支付方式
-                            </th>
-                            <th>
-                                支付状态
+                                类目类型
                             </th>
                             <th>
                                 创建时间
+                            </th>
+                            <th>
+                                修改时间
                             </th>
                             <th colspan="2">
                                 操作
@@ -48,47 +36,35 @@
                         </thead>
                         <tbody>
 
-                        <#list pageResult.content as orderDto>
+                        <#list productCategories.content as ProductCategory>
                         <tr>
                             <td>
-                            ${orderDto.orderId}
+                            ${ProductCategory.categoryId}
                             </td>
                             <td>
-                            ${orderDto.buyerName}
+                            ${ProductCategory.categoryName}
                             </td>
                             <td>
-                            ${orderDto.buyerPhone}
+                            ${ProductCategory.categoryType}
                             </td>
                             <td>
-                            ${orderDto.buyerAddress}
+                            ${ProductCategory.createTime}
                             </td>
                             <td>
-                            ${orderDto.orderAmount}
+                            ${ProductCategory.updateTime}
                             </td>
                             <td>
-                            ${orderDto.getOrderStatusEnum().getMessage()}
+                                <a class="btn btn-info btn-lg"
+                                   href="/sell/category/categoryMsg?categoryId=${ProductCategory.categoryId}">修改</a>
                             </td>
                             <td>
-                                微信
-                            </td>
-                            <td>
-                            ${orderDto.getPayStatusEnum().getMessage()}
-                            </td>
-                            <td>
-                            ${orderDto.createTime}
-                            </td>
-                            <td>
-                                <a class="btn btn-info btn-lg" href="detail?orderId=${orderDto.orderId}">详情</a>
-
-                            </td>
-                            <td>
-                                <#if orderDto.getOrderStatus() !=2>
-                                    <a class="btn btn-info btn-lg" href="#">取消</a>
-                                </#if>
+                                <button class="btn btn-danger btn-lg" data-toggle="modal" data-target="#myModal">
+                                    删除
+                                </button>
+                            <#--<a href="/sell/category/delete?categoryId=${ProductCategory.categoryId}">删除</a>-->
                             </td>
                         </tr>
                         </#list>
-
                         </tbody>
                     </table>
                 </div>
@@ -101,27 +77,27 @@
                         </li>
                     <#else >
                         <li>
-                            <a href="/sell/seller/list?page=${currPage-1}&size=${size}">上一页</a>
+                            <a href="/sell/category/list?page=${currPage-1}&size=${size}">上一页</a>
                         </li>
                     </#if>
-                    <#list  1 ..pageResult.totalPages as index>
+                    <#list  1 ..productCategories.totalPages as index>
                         <#if currPage==index >
                             <li class="disabled"><a
-                                    href="/sell/seller/list?page=${index}&size=${size}">${index}</a>
+                                    href="/sell/category/list?page=${index}&size=${size}">${index}</a>
                             </li>
                         <#else>
-                            <li><a href="/sell/seller/list?page=${index}&size=${size}">${index}</a>
+                            <li><a href="/sell/category/list?page=${index}&size=${size}">${index}</a>
                             </li>
                         </#if>
 
                     </#list>
-                    <#if currPage gte pageResult.totalPages>
+                    <#if currPage gte productCategories.totalPages>
                         <li>
                             <a href="#">下一页</a>
                         </li>
                     <#else >
                         <li>
-                            <a href="/sell/seller/list?page=${currPage+1}&size=${size}">下一页</a>
+                            <a href="/sell/category/list?page=${currPage+1}&size=${size}">下一页</a>
                         </li>
                     </#if>
                     </ul>
@@ -129,6 +105,33 @@
             </div>
         </div>
     </div>
+</div>
+
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    商品类目删除
+                </h4>
+            </div>
+            <div class="modal-body">
+                是否真的要删除这个类目
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消
+                </button>
+                <button type="button" class="btn btn-primary">
+                    确认删除
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
 </div>
 </body>
 </html>

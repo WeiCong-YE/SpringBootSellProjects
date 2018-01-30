@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/buyer/product")
 @Slf4j
-@Api( value = "买家接口",description = "商品管理模块")
+@Api(value = "买家接口",description = "商品管理模块")
 public class BuyerProductController {
 
 
@@ -33,8 +33,6 @@ public class BuyerProductController {
 
     /**
      * 商品列表
-     *
-     * @return
      */
     @ApiOperation("查询商品列表")
     @GetMapping("/list")

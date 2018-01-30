@@ -7,6 +7,10 @@ html {
   height: 100%;
   /*background-color: #583e7e;*/
 }
+td {
+  text-align: center; /*设置水平居中*/
+  vertical-align: middle; /*设置垂直居中*/
+}
 .nav .open > a {
   background-color: transparent;
 }
@@ -262,3 +266,4 @@ html {
   display: block;
   opacity: 1;
 }
+
